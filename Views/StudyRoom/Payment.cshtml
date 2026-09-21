@@ -1,0 +1,47 @@
+﻿@using UTHMLibrary.ViewModels
+@model StudyRoomBookingViewModel
+@{
+    ViewData["Title"] = "Confirm Payment";
+    var room = ViewBag.Room as StudyRoom;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="payment-card">
+            <div class="payment-summary">
+                <h4><i class="bi bi-credit-card"></i> Confirm Payment</h4>
+                <div class="row-item">
+                    <span>Room</span>
+                    <span><strong>@room?.RoomNumber</strong></span>
+                </div>
+                <div class="row-item">
+                    <span>Date</span>
+                    <span><strong>@Model.BookingDate.ToString("dd MMM yyyy")</strong></span>
+                </div>
+                <div class="row-item">
+                    <span>Time</span>
+                    <span><strong>@Model.StartTime - @Model.EndTime</strong></span>
+                </div>
+                <div class="row-item" style="font-size:1.2rem; font-weight:700; padding-top:0.8rem;">
+                    <span>Amount</span>
+                    <span>RM @Model.Price.ToString("F2")</span>
+                </div>
+            </div>
+
+            <div class="text-center mb-3">
+                <i class="bi bi-shield-check" style="font-size: 2rem; color: #16a34a;"></i>
+                <p class="text-muted">Your payment is secure and encrypted.</p>
+            </div>
+
+            <form asp-action="ConfirmPayment" asp-route-id="@room?.Id" method="post">
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="bi bi-check-circle"></i> Confirm Payment RM @Model.Price.ToString("F2")
+                </button>
+            </form>
+
+            <p class="text-center mt-3 mb-0 small text-muted">
+                <i class="bi bi-info-circle"></i> By confirming, you agree to the booking terms.
+            </p>
+        </div>
+    </div>
+</div>

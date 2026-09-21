@@ -1,0 +1,65 @@
+﻿@model List<StudyRoom>
+@{
+    ViewData["Title"] = "Study Rooms";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-door-open"></i> Study Rooms</h1>
+        <p>Book a quiet study room for RM10 per session</p>
+    </div>
+    <div>
+        <span class="badge bg-success fs-6 me-2">
+            <span class="live-dot green"></span> @Model.Count(r => r.IsAvailable) Available
+        </span>
+        <span class="badge bg-danger fs-6">
+            <span class="live-dot red"></span> @Model.Count(r => !r.IsAvailable) Unavailable
+        </span>
+    </div>
+</div>
+
+<div class="row g-3">
+    @foreach (var room in Model)
+    {
+        <div class="col-md-4 col-lg-3">
+            <div class="room-card @(room.IsAvailable ? "available" : "unavailable")">
+                <div class="room-status-bar">
+                    @if (room.IsAvailable)
+                    {
+                        <span><span class="live-dot green"></span> AVAILABLE</span>
+                    }
+                    else
+                    {
+                        <span><span class="live-dot red"></span> UNAVAILABLE</span>
+                    }
+                </div>
+                <div class="room-body">
+                    <h3 class="room-number">@room.RoomNumber</h3>
+                    <p class="room-location"><i class="bi bi-geo-alt"></i> @room.Location</p>
+                    <div class="room-meta">
+                        <span><i class="bi bi-people"></i> @room.Capacity persons</span>
+                        <span><i class="bi bi-clock"></i> 2 hours max</span>
+                    </div>
+                    <p class="room-desc">@room.Description</p>
+                    <div class="room-price">RM @room.Price.ToString("F2")</div>
+                    @if (room.IsAvailable)
+                    {
+                        <div class="room-action">
+                            <a asp-action="Book" asp-route-id="@room.Id" class="btn btn-success w-100">
+                                <i class="bi bi-calendar-plus"></i> Book Now
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="room-action">
+                            <button class="btn btn-secondary w-100" disabled>
+                                <i class="bi bi-x-circle"></i> Unavailable
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

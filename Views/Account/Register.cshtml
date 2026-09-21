@@ -1,0 +1,97 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_AuthLayout";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo"><i class="bi bi-person-plus"></i></div>
+        <h2>Create Account</h2>
+        <p>Register for UTHM Library access</p>
+    </div>
+
+    <div class="alert alert-info small">
+        <i class="bi bi-info-circle"></i>
+        <strong>Note:</strong> After registration, you will receive a verification code via email.
+        Please enter the code to complete your registration.
+    </div>
+
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+        <div class="mb-2">
+            <label asp-for="FullName" class="form-label small">Full Name</label>
+            <input asp-for="FullName" class="form-control" placeholder="e.g., Ahmad Bin Ali" />
+            <span asp-validation-for="FullName" class="text-danger small"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label asp-for="MatricNumber" class="form-label small">Matric Number</label>
+                <input asp-for="MatricNumber" class="form-control" placeholder="AI210001" />
+                <span asp-validation-for="MatricNumber" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="Faculty" class="form-label small">Faculty</label>
+                <select asp-for="Faculty" class="form-select">
+                    <option value="">Select Faculty</option>
+                    <option>FSKTM</option>
+                    <option>FKMP</option>
+                    <option>FKAAB</option>
+                    <option>FKEE</option>
+                    <option>FPTV</option>
+                    <option>FPTP</option>
+                    <option>FAST</option>
+                    <option>FKAAS</option>
+                </select>
+                <span asp-validation-for="Faculty" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Email" class="form-label small">Email</label>
+            <input asp-for="Email" class="form-control" placeholder="you@uthm.edu.my" />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Phone" class="form-label small">Phone Number</label>
+            <input asp-for="Phone" class="form-control" placeholder="012-3456789" />
+            <span asp-validation-for="Phone" class="text-danger small"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label asp-for="Password" class="form-label small">Password</label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Min 6 characters" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+                <small class="text-muted">Min 6 characters</small>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="ConfirmPassword" class="form-label small">Confirm Password</label>
+                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-uthm w-100 mt-2">
+            <i class="bi bi-envelope"></i> Register & Verify Email
+        </button>
+    </form>
+
+    <p class="text-center mt-3 mb-0 small">
+        Already have an account? <a asp-action="Login" class="auth-link">Login here</a>
+    </p>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-uppercase matric number
+            $('#MatricNumber').on('input', function() {
+                $(this).val($(this).val().toUpperCase());
+            });
+        });
+    </script>
+}

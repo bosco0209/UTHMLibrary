@@ -1,0 +1,86 @@
+﻿@using UTHMLibrary.ViewModels
+@model StudyRoomBookingViewModel
+@{
+    ViewData["Title"] = "Book Study Room";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="payment-card">
+            <div class="payment-summary">
+                <h4><i class="bi bi-door-open"></i> Booking Summary</h4>
+                <div class="row-item">
+                    <span>Room</span>
+                    <span><strong>@Model.RoomNumber</strong></span>
+                </div>
+                <div class="row-item">
+                    <span>Price</span>
+                    <span><strong>RM @Model.Price.ToString("F2")</strong></span>
+                </div>
+                <div class="row-item" style="font-size:1.2rem; font-weight:700; padding-top:0.8rem;">
+                    <span>Total</span>
+                    <span>RM @Model.Price.ToString("F2")</span>
+                </div>
+            </div>
+
+            <form asp-action="Book" method="post">
+                <input type="hidden" asp-for="StudyRoomId" />
+                <input type="hidden" asp-for="RoomNumber" />
+                <input type="hidden" asp-for="Price" />
+
+                <div class="mb-3">
+                    <label asp-for="BookingDate" class="form-label"><i class="bi bi-calendar"></i> Date</label>
+                    <input asp-for="BookingDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="BookingDate" class="text-danger small"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="StartTime" class="form-label"><i class="bi bi-clock"></i> Start</label>
+                        <select asp-for="StartTime" class="form-select">
+                            <option value="08:00">8:00 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="EndTime" class="form-label"><i class="bi bi-clock"></i> End</label>
+                        <select asp-for="EndTime" class="form-select">
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="21:00">9:00 PM</option>
+                            <option value="22:00">10:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-uthm w-100">
+                    <i class="bi bi-credit-card"></i> Proceed to Payment (RM @Model.Price.ToString("F2"))
+                </button>
+            </form>
+
+            <p class="text-center mt-3 mb-0 small text-muted">
+                <i class="bi bi-info-circle"></i> You will be redirected to payment confirmation.
+            </p>
+        </div>
+    </div>
+</div>

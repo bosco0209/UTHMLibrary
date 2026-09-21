@@ -1,0 +1,65 @@
+﻿@model List<MeetingRoom>
+@{
+    ViewData["Title"] = "Manage Meeting Rooms";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-people"></i> Manage Meeting Rooms</h1>
+        <p>Manage meeting room availability</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var room in Model)
+        {
+            <div class="col-md-4">
+                <div class="room-card @(room.IsAvailable ? "available" : "unavailable")">
+                    <div class="room-status-bar">
+                        @if (room.IsAvailable)
+                        {
+                            <span><span class="live-dot green"></span> AVAILABLE</span>
+                        }
+                        else
+                        {
+                            <span><span class="live-dot red"></span> UNAVAILABLE</span>
+                        }
+                    </div>
+                    <div class="room-body">
+                        <h3 class="room-number">@room.RoomNumber</h3>
+                        <p class="room-location"><i class="bi bi-geo-alt"></i> @room.Location</p>
+                        <div class="room-meta">
+                            <span><i class="bi bi-people"></i> @room.Capacity persons</span>
+                            <span class="text-success"><i class="bi bi-gift"></i> FREE</span>
+                        </div>
+                        <p class="room-desc">@room.Description</p>
+                        <form asp-action="ToggleMeetingRoom" method="post">
+                            <input type="hidden" name="id" value="@room.Id" />
+                            <button type="submit" class="btn @(room.IsAvailable ? "btn-danger" : "btn-success") w-100">
+                                @if (room.IsAvailable)
+                                {
+                                    <span><i class="bi bi-x-circle"></i> Mark Unavailable</span>
+                                }
+                                else
+                                {
+                                    <span><i class="bi bi-check-circle"></i> Mark Available</span>
+                                }
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-people" style="font-size: 3rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No meeting rooms found.</p>
+            </div>
+        </div>
+    }
+</div>

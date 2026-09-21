@@ -1,0 +1,75 @@
+﻿@model UploadResourceViewModel
+@{
+    ViewData["Title"] = "Upload Resource";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="payment-card">
+            <h4 class="mb-3"><i class="bi bi-upload"></i> Upload New Resource</h4>
+            <p class="text-muted">Add a new resource to the library collection.</p>
+
+            <form asp-action="UploadResource" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Title</label>
+                    <input asp-for="Title" class="form-control" placeholder="Enter resource title" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Category" class="form-label">Category</label>
+                    <select asp-for="Category" class="form-select">
+                        <option value="PastYearPaper">Past Year Paper</option>
+                        <option value="EBook">E-Book</option>
+                        <option value="Resource">Resource</option>
+                        <option value="ProjectReport">Project Report</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Author" class="form-label">Author</label>
+                        <input asp-for="Author" class="form-control" placeholder="Author name" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Year" class="form-label">Year</label>
+                        <input asp-for="Year" class="form-control" placeholder="2024" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Faculty" class="form-label">Faculty</label>
+                    <select asp-for="Faculty" class="form-select">
+                        <option value="">Select Faculty</option>
+                        <option>FSKTM</option>
+                        <option>FKMP</option>
+                        <option>FKAAB</option>
+                        <option>FKEE</option>
+                        <option>FPTV</option>
+                        <option>FPTP</option>
+                        <option>FAST</option>
+                        <option>General</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control" rows="3" placeholder="Brief description"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="File" class="form-label">File (PDF, DOC, etc.)</label>
+                    <input asp-for="File" class="form-control" type="file" />
+                    <span asp-validation-for="File" class="text-danger small"></span>
+                    <small class="text-muted">Max file size: 10MB</small>
+                </div>
+
+                <button type="submit" class="btn btn-uthm w-100">
+                    <i class="bi bi-upload"></i> Upload Resource
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

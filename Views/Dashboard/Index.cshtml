@@ -1,0 +1,138 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var user = ViewBag.User as User;
+    var studyBookings = ViewBag.StudyBookings as List<StudyRoomBooking>;
+    var meetingBookings = ViewBag.MeetingBookings as List<MeetingRoomBooking>;
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-speedometer2"></i> My Dashboard</h1>
+        <p>Welcome back, @user?.FullName!</p>
+    </div>
+    <span class="badge bg-primary fs-6">@user?.MatricNumber</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-door-open"></i></div>
+            <p class="stat-value">@ViewBag.ActiveStudyBookings</p>
+            <p class="stat-label">Active Study Bookings</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card accent">
+            <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
+            <p class="stat-value">@ViewBag.PendingMeetingBookings</p>
+            <p class="stat-label">Pending Meeting Requests</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card gold">
+            <div class="stat-icon"><i class="bi bi-calendar"></i></div>
+            <p class="stat-value">@((studyBookings?.Count ?? 0) + (meetingBookings?.Count ?? 0))</p>
+            <p class="stat-label">Total Bookings</p>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">My Study Room Bookings</h4>
+<div class="table-card mb-4">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (studyBookings?.Any() == true)
+            {
+                @foreach (var b in studyBookings)
+                {
+                    <tr>
+                        <td><strong>@b.StudyRoom?.RoomNumber</strong></td>
+                        <td>@b.BookingDate.ToString("dd MMM yyyy")</td>
+                        <td>@b.StartTime - @b.EndTime</td>
+                        <td>RM @b.AmountPaid.ToString("F2")</td>
+                        <td>
+                            <span class="badge @(b.Status == "Confirmed" ? "badge-confirmed" : "badge-cancelled")">
+                                @b.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (b.Status == "Confirmed")
+                            {
+                                <a asp-controller="StudyRoom" asp-action="Cancel" asp-route-id="@b.Id"
+                                   class="btn btn-sm btn-danger" onclick="return confirm('Cancel this booking?')">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-3">No study room bookings found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<h4 class="mb-3">My Meeting Room Bookings</h4>
+<div class="table-card">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (meetingBookings?.Any() == true)
+            {
+                @foreach (var b in meetingBookings)
+                {
+                    <tr>
+                        <td><strong>@b.MeetingRoom?.RoomNumber</strong></td>
+                        <td>@b.BookingDate.ToString("dd MMM yyyy")</td>
+                        <td>@b.StartTime - @b.EndTime</td>
+                        <td>@b.Purpose</td>
+                        <td>
+                            <span class="badge @(b.Status == "Approved" ? "badge-approved" : b.Status == "Pending" ? "badge-pending" : "badge-rejected")">
+                                @b.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (b.Status == "Pending")
+                            {
+                                <a asp-controller="MeetingRoom" asp-action="Cancel" asp-route-id="@b.Id"
+                                   class="btn btn-sm btn-danger" onclick="return confirm('Cancel this booking?')">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-3">No meeting room bookings found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

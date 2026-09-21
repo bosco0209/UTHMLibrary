@@ -1,0 +1,136 @@
+﻿@model VerifyEmailViewModel
+@{
+    ViewData["Title"] = "Verify Email";
+    Layout = "_AuthLayout";
+    var email = ViewBag.Email ?? "";
+}
+
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo"><i class="bi bi-envelope-check"></i></div>
+        <h2>Verify Your Email</h2>
+        <p>We sent a verification code to <strong>@email</strong></p>
+    </div>
+
+    <div class="alert alert-success small">
+        <i class="bi bi-check-circle"></i>
+        Please enter the 6-digit verification code sent to your email.
+    </div>
+
+    <form asp-action="VerifyEmail" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+        <input type="hidden" asp-for="Email" value="@email" />
+
+        <div class="mb-3">
+            <label asp-for="Code" class="form-label">
+                <i class="bi bi-shield-lock"></i> Verification Code
+            </label>
+            <div class="input-group">
+                <input asp-for="Code" class="form-control" placeholder="Enter 6-digit code" maxlength="6" autofocus />
+                <button type="button" class="btn btn-outline-secondary" id="pasteBtn" title="Paste from clipboard">
+                    <i class="bi bi-clipboard"></i>
+                </button>
+            </div>
+            <span asp-validation-for="Code" class="text-danger small"></span>
+            <div class="mt-2">
+                <small class="text-muted">
+                    <i class="bi bi-clock"></i> Code expires in <strong>15 minutes</strong>
+                </small>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-uthm w-100">
+            <i class="bi bi-check-circle"></i> Verify & Complete Registration
+        </button>
+    </form>
+
+    <div class="text-center mt-3">
+        <p class="mb-1 small">
+            Didn't receive the code?
+            <a href="#" id="resendLink" class="auth-link">Resend Code</a>
+        </p>
+        <p class="mb-0 small">
+            <a asp-action="Register" class="auth-link">
+                <i class="bi bi-arrow-left"></i> Back to Registration
+            </a>
+        </p>
+    </div>
+
+    <div id="resendMessage" class="mt-2" style="display: none;"></div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var timer = 60;
+            var isResending = false;
+
+            // Paste button
+            $('#pasteBtn').click(async function() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    $('#Code').val(text);
+                } catch (err) {
+                    alert('Unable to paste. Please enter the code manually.');
+                }
+            });
+
+            // Resend code
+            $('#resendLink').click(function(e) {
+                e.preventDefault();
+
+                if (isResending) return;
+
+                var email = $('#Email').val();
+                if (!email) {
+                    alert('Email not found. Please go back to registration.');
+                    return;
+                }
+
+                isResending = true;
+                $('#resendLink').text('Sending...').css('opacity', '0.5');
+
+                $.ajax({
+                    url: '@Url.Action("ResendVerification", "Account")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ email: email }),
+                    success: function(response) {
+                        if (response.success) {
+                            $('#resendMessage').show()
+                                .html('<div class="alert alert-success small">✅ ' + response.message + '</div>')
+                                .fadeIn();
+
+                            // Disable resend for 60 seconds
+                            timer = 60;
+                            $('#resendLink').text('Wait ' + timer + 's');
+                            var countdown = setInterval(function() {
+                                timer--;
+                                $('#resendLink').text('Wait ' + timer + 's');
+                                if (timer <= 0) {
+                                    clearInterval(countdown);
+                                    $('#resendLink').text('Resend Code').css('opacity', '1');
+                                    isResending = false;
+                                }
+                            }, 1000);
+                        } else {
+                            $('#resendMessage').show()
+                                .html('<div class="alert alert-danger small">❌ ' + response.message + '</div>')
+                                .fadeIn();
+                            isResending = false;
+                            $('#resendLink').text('Resend Code').css('opacity', '1');
+                        }
+                    },
+                    error: function() {
+                        $('#resendMessage').show()
+                            .html('<div class="alert alert-danger small">❌ Failed to resend code. Please try again.</div>')
+                            .fadeIn();
+                        isResending = false;
+                        $('#resendLink').text('Resend Code').css('opacity', '1');
+                    }
+                });
+            });
+        });
+    </script>
+}

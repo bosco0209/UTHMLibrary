@@ -1,0 +1,434 @@
+﻿@using UTHMLibrary.Models
+
+@{
+    ViewData["Title"] = "Home";
+    var user = ViewBag.User as User;
+    var faculty = ViewBag.UserFaculty as string ?? "General";
+    var events = ViewBag.Events as List<FacultyEvent> ?? new List<FacultyEvent>();
+}
+
+<style>
+    /* ===== FACULTY HIGHLIGHTS ===== */
+    .faculty-banner {
+        background: linear-gradient(135deg, #003876, #0056b3);
+        color: white;
+        padding: 25px 30px;
+        border-radius: 16px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .faculty-banner::before {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,215,0,0.08);
+            border-radius: 50%;
+        }
+
+        .faculty-banner .faculty-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            color: #ffd700;
+        }
+
+        .faculty-banner h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .faculty-banner .faculty-name {
+            color: #ffd700;
+        }
+
+    /* ===== EVENTS / NOTIFICATIONS ===== */
+    .events-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .event-card {
+        background: white;
+        border-radius: 12px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+        border-left: 4px solid #003876;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .event-card .event-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .event-card .event-title {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        .event-card .event-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 4px 0 0 0;
+        }
+
+        .event-card.color-primary {
+            border-left-color: #003876;
+        }
+
+        .event-card.color-success {
+            border-left-color: #28a745;
+        }
+
+        .event-card.color-danger {
+            border-left-color: #dc3545;
+        }
+
+        .event-card.color-warning {
+            border-left-color: #ffc107;
+        }
+
+        .event-card.color-info {
+            border-left-color: #17a2b8;
+        }
+
+    /* ===== FACULTY RESOURCES ===== */
+    .faculty-resources {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .faculty-resource-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+    }
+
+        .faculty-resource-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .faculty-resource-card .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+            .faculty-resource-card .card-header h6 {
+                margin: 0;
+                font-weight: 700;
+                color: #003876;
+            }
+
+            .faculty-resource-card .card-header i {
+                font-size: 1.3rem;
+                color: #ffd700;
+            }
+
+        .faculty-resource-card .resource-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .faculty-resource-card .resource-item:last-child {
+                border-bottom: none;
+            }
+
+            .faculty-resource-card .resource-item .title {
+                font-size: 0.9rem;
+                color: #1a1a2e;
+            }
+
+                .faculty-resource-card .resource-item .title i {
+                    margin-right: 8px;
+                    color: #6b7280;
+                    font-size: 0.8rem;
+                }
+
+            .faculty-resource-card .resource-item .badge {
+                font-size: 0.7rem;
+            }
+
+        .faculty-resource-card .view-all {
+            margin-top: 12px;
+            text-align: right;
+        }
+
+            .faculty-resource-card .view-all a {
+                color: #003876;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.85rem;
+            }
+
+                .faculty-resource-card .view-all a:hover {
+                    text-decoration: underline;
+                }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 768px) {
+        .faculty-banner {
+            padding: 20px;
+            text-align: center;
+        }
+
+            .faculty-banner .d-flex {
+                flex-direction: column;
+                align-items: center;
+            }
+
+        .faculty-resources {
+            grid-template-columns: 1fr;
+        }
+
+        .events-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- ============================================
+FACULTY BANNER
+============================================ -->
+<div class="faculty-banner">
+    <div class="d-flex align-items-center">
+        <div class="faculty-icon">
+            <i class="bi bi-building"></i>
+        </div>
+        <div>
+            <h3>
+                Welcome to <span class="faculty-name">@faculty</span> Faculty Hub
+            </h3>
+            <p class="mb-0 opacity-75">
+                <i class="bi bi-person"></i> @user?.FullName &nbsp;|&nbsp;
+                <i class="bi bi-id-card"></i> @user?.MatricNumber
+            </p>
+            <p class="mb-0 small opacity-75">
+                <i class="bi bi-clock"></i> Customized resources and updates for your faculty
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+EVENTS / NOTIFICATIONS
+============================================ -->
+@if (events.Any())
+{
+    <div class="events-section">
+        @foreach (var evt in events)
+        {
+            <a href="@evt.Link" class="event-card color-@evt.Color">
+                <div class="d-flex align-items-center">
+                    <span class="event-icon"><i class="@evt.Icon"></i></span>
+                    <div>
+                        <p class="event-title">@evt.Title</p>
+                        <p class="event-desc">@evt.Description</p>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+}
+
+<!-- ============================================
+FACULTY RESOURCES
+============================================ -->
+<div class="faculty-resources">
+    <!-- Past Year Papers -->
+    <div class="faculty-resource-card">
+        <div class="card-header">
+            <i class="bi bi-file-earmark-text"></i>
+            <h6>Past Year Papers</h6>
+            <span class="badge bg-primary ms-auto">@(ViewBag.FacultyPapers?.Count ?? 0)</span>
+        </div>
+        @if (ViewBag.FacultyPapers != null && ViewBag.FacultyPapers.Count > 0)
+        {
+            @foreach (var paper in ViewBag.FacultyPapers)
+            {
+                <div class="resource-item">
+                    <span class="title">
+                        <i class="bi bi-file-pdf"></i> @paper.Title
+                    </span>
+                    <span class="badge bg-secondary">@paper.Year</span>
+                </div>
+            }
+            <div class="view-all">
+                <a href="/Resources/PastYearPapers">View all <i class="bi bi-arrow-right"></i></a>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted small text-center py-2">No past year papers for your faculty yet.</p>
+        }
+    </div>
+
+    <!-- E-Books -->
+    <div class="faculty-resource-card">
+        <div class="card-header">
+            <i class="bi bi-book"></i>
+            <h6>E-Books</h6>
+            <span class="badge bg-success ms-auto">@(ViewBag.FacultyEBooks?.Count ?? 0)</span>
+        </div>
+        @if (ViewBag.FacultyEBooks != null && ViewBag.FacultyEBooks.Count > 0)
+        {
+            @foreach (var ebook in ViewBag.FacultyEBooks)
+            {
+                <div class="resource-item">
+                    <span class="title">
+                        <i class="bi bi-book"></i> @ebook.Title
+                    </span>
+                    <span class="badge bg-info text-white">@ebook.Author</span>
+                </div>
+            }
+            <div class="view-all">
+                <a href="/Resources/EBooks">View all <i class="bi bi-arrow-right"></i></a>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted small text-center py-2">No e-books for your faculty yet.</p>
+        }
+    </div>
+
+    <!-- Project Reports -->
+    <div class="faculty-resource-card">
+        <div class="card-header">
+            <i class="bi bi-mortarboard"></i>
+            <h6>Project Reports</h6>
+            <span class="badge bg-warning ms-auto">@(ViewBag.FacultyProjects?.Count ?? 0)</span>
+        </div>
+        @if (ViewBag.FacultyProjects != null && ViewBag.FacultyProjects.Count > 0)
+        {
+            @foreach (var project in ViewBag.FacultyProjects)
+            {
+                <div class="resource-item">
+                    <span class="title">
+                        <i class="bi bi-file-earmark"></i> @project.Title
+                    </span>
+                    <span class="badge bg-secondary">@project.Year</span>
+                </div>
+            }
+            <div class="view-all">
+                <a href="/Resources/ProjectReports">View all <i class="bi bi-arrow-right"></i></a>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted small text-center py-2">No project reports for your faculty yet.</p>
+        }
+    </div>
+</div>
+
+<!-- ============================================
+QUICK ACCESS (Existing)
+============================================ -->
+<h4 class="mb-3" style="color: #003876; font-weight: 700;">
+    <i class="bi bi-grid-3x3-gap"></i> Quick Access
+</h4>
+<div class="row g-3">
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="Resources" asp-action="PastYearPapers" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div>
+                    <h5>Past Year Papers</h5>
+                    <p class="desc">Browse exam papers from all faculties.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="Resources" asp-action="EBooks" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#16a34a,#0e7a37);"><i class="bi bi-book"></i></div>
+                <div>
+                    <h5>E-Books</h5>
+                    <p class="desc">Digital books & references library.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="Resources" asp-action="Index" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#f4b400,#b08300);"><i class="bi bi-collection"></i></div>
+                <div>
+                    <h5>Resources</h5>
+                    <p class="desc">Journals, guides & study materials.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="Resources" asp-action="ProjectReports" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);"><i class="bi bi-mortarboard"></i></div>
+                <div>
+                    <h5>Project Reports</h5>
+                    <p class="desc">Undergraduate FYP archive.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="StudyRoom" asp-action="Index" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#0891b2,#0e7490);"><i class="bi bi-door-open"></i></div>
+                <div>
+                    <h5>Book Study Room</h5>
+                    <p class="desc">RM10 per session. Live availability.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="MeetingRoom" asp-action="Index" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#E63946,#c92a37);"><i class="bi bi-people"></i></div>
+                <div>
+                    <h5>Book Meeting Room</h5>
+                    <p class="desc">Free. Requires 5 matric numbers.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4 col-sm-6">
+        <a asp-controller="Chat" asp-action="Index" class="text-decoration-none">
+            <div class="resource-card">
+                <div class="resource-icon" style="background:linear-gradient(135deg,#4ade80,#22c55e);"><i class="bi bi-robot"></i></div>
+                <div>
+                    <h5>AI Chat Assistant</h5>
+                    <p class="desc">Get instant help from our AI assistant.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

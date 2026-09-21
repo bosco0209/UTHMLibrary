@@ -1,0 +1,63 @@
+﻿@model List<Resource>
+@{
+    ViewData["Title"] = "Manage Resources";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-folder"></i> Manage Resources</h1>
+        <p>Upload and manage digital resources</p>
+    </div>
+    <a asp-action="UploadResource" class="btn btn-uthm">
+        <i class="bi bi-upload"></i> Upload New
+    </a>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.Category))
+{
+    <div class="alert alert-info">
+        <i class="bi bi-filter"></i> Filtering by: <strong>@ViewBag.Category</strong>
+        <a asp-action="Resources" class="float-end">Clear filter</a>
+    </div>
+}
+
+<div class="table-card">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Downloads</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.Title</strong></td>
+                        <td><span class="badge bg-secondary">@item.Category</span></td>
+                        <td>@item.Author</td>
+                        <td>@item.Year</td>
+                        <td>@item.DownloadCount</td>
+                        <td>
+                            <a asp-action="DeleteResource" asp-route-id="@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Delete this resource?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-3">No resources found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,485 @@
+﻿@{
+    var role = User.IsInRole("Admin") ? "Admin" : "Student";
+    var displayName = User.Identity?.Name ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UTHM Library - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+            /* ===== NAVBAR STYLES ===== */
+            .uthm-navbar {
+                background: linear-gradient(135deg, #003876, #0056b3);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                padding: 0.6rem 0;
+                position: sticky;
+                top: 0;
+                z-index: 1050;
+            }
+
+            .uthm-navbar .navbar-brand {
+                color: #fff !important;
+                font-weight: 700;
+                font-size: 1.2rem;
+                letter-spacing: 0.5px;
+            }
+
+            .uthm-navbar .navbar-brand i {
+                color: #ffd700;
+                margin-right: 8px;
+            }
+
+            .uthm-navbar .nav-link {
+                color: rgba(255,255,255,0.9) !important;
+                font-weight: 500;
+                padding: 0.5rem 1rem !important;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .uthm-navbar .nav-link:hover {
+                background: rgba(255,255,255,0.12);
+                color: #fff !important;
+                transform: translateY(-1px);
+            }
+
+            .uthm-navbar .nav-link i {
+                margin-right: 6px;
+                font-size: 0.9rem;
+            }
+
+            .uthm-navbar .nav-link.active {
+                background: rgba(255,215,0,0.15);
+                color: #ffd700 !important;
+            }
+
+            /* ===== CHATBOT NAV BUTTON ===== */
+            .chatbot-nav-btn {
+                background: rgba(74, 222, 128, 0.15) !important;
+                border: 1.5px solid rgba(74, 222, 128, 0.25) !important;
+                border-radius: 25px !important;
+                padding: 0.4rem 1.2rem !important;
+                transition: all 0.3s ease;
+            }
+
+            .chatbot-nav-btn:hover {
+                background: rgba(74, 222, 128, 0.25) !important;
+                border-color: #4ade80 !important;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 20px rgba(74, 222, 128, 0.25);
+            }
+
+            .chatbot-nav-btn i {
+                color: #4ade80 !important;
+                font-size: 1.1rem;
+            }
+
+            /* ===== DROPDOWN - HOVER BASED ===== */
+            .dropdown-hover {
+                position: relative;
+            }
+
+            .dropdown-hover .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                min-width: 220px;
+                background: #fff;
+                border: none;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+                border-radius: 12px;
+                padding: 0.5rem 0;
+                margin-top: 4px;
+                z-index: 1060;
+            }
+
+            .dropdown-hover:hover .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-hover .dropdown-item {
+                padding: 0.5rem 1.2rem;
+                font-weight: 500;
+                transition: all 0.2s;
+                color: #1a1a2e;
+                cursor: pointer;
+                display: block;
+                text-decoration: none;
+            }
+
+            .dropdown-hover .dropdown-item:hover {
+                background: rgba(0,56,118,0.08);
+                color: #003876;
+                padding-left: 1.5rem;
+            }
+
+            .dropdown-hover .dropdown-item i {
+                width: 24px;
+                margin-right: 10px;
+                color: #003876;
+            }
+
+            .dropdown-hover .dropdown-item .badge {
+                font-size: 0.65rem;
+                padding: 2px 8px;
+            }
+
+            .dropdown-hover .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            /* ===== MOBILE DROPDOWN ===== */
+            @@media (max-width: 992px) {
+                .dropdown-hover .dropdown-menu {
+                    position: static;
+                    box-shadow: none;
+                    background: rgba(255,255,255,0.05);
+                    padding-left: 1.5rem;
+                }
+
+                .dropdown-hover .dropdown-item {
+                    color: rgba(255,255,255,0.8) !important;
+                }
+
+                .dropdown-hover .dropdown-item:hover {
+                    background: rgba(255,255,255,0.1);
+                    color: #fff !important;
+                }
+
+                .dropdown-hover .dropdown-item i {
+                    color: rgba(255,255,255,0.6);
+                }
+            }
+
+            /* ===== OTHER STYLES ===== */
+            .nav-user {
+                color: #fff !important;
+                font-size: 0.9rem;
+                padding: 0.4rem 1rem;
+                background: rgba(255,255,255,0.12);
+                border-radius: 20px;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .btn-uthm-outline {
+                background: transparent;
+                color: #fff;
+                border: 1.5px solid rgba(255,255,255,0.6);
+                font-weight: 500;
+                padding: 0.35rem 1.2rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                text-decoration: none;
+            }
+
+            .btn-uthm-outline:hover {
+                background: #fff;
+                color: #003876;
+                transform: translateY(-2px);
+            }
+
+            .uthm-footer {
+                background: #002554;
+                color: rgba(255,255,255,0.8);
+                margin-top: 3rem;
+                padding: 1.5rem 0;
+            }
+
+            .uthm-footer h6 {
+                color: #fff;
+                margin-bottom: 0.2rem;
+            }
+
+            .uthm-footer small {
+                opacity: 0.7;
+            }
+
+            @@media (max-width: 768px) {
+                .uthm-footer .text-start,
+                .uthm-footer .text-end {
+                    text-align: center !important;
+                }
+                .uthm-footer .row > div {
+                    margin-bottom: 10px;
+                }
+            }
+
+            /* ===== FLOATING CHATBOT ===== */
+            .chatbot-float {
+                position: fixed;
+                bottom: 25px;
+                right: 25px;
+                z-index: 9999;
+            }
+
+            .chatbot-float .float-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #003876, #0056b3);
+                color: white;
+                font-size: 28px;
+                box-shadow: 0 4px 20px rgba(0,56,118,0.4);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .chatbot-float .float-btn:hover {
+                transform: scale(1.1) translateY(-3px);
+                box-shadow: 0 8px 30px rgba(0,56,118,0.5);
+            }
+
+            .chatbot-float .float-btn .notification-dot {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 16px;
+                height: 16px;
+                background: #4ade80;
+                border-radius: 50%;
+                border: 2px solid white;
+                animation: pulse-dot 2s infinite;
+            }
+
+            @@keyframes pulse-dot {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.5; transform: scale(0.8); }
+            }
+
+            @@media (max-width: 576px) {
+                .chatbot-float .float-btn {
+                    width: 50px;
+                    height: 50px;
+                    font-size: 22px;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+    NAVBAR
+    ============================================ -->
+    <nav class="navbar navbar-expand-lg uthm-navbar sticky-top">
+        <div class="container-fluid px-4">
+            <!-- Brand -->
+            @if (User.Identity?.IsAuthenticated == true && role == "Admin")
+            {
+                <a class="navbar-brand" asp-controller="Admin" asp-action="Index">
+                    <i class="bi bi-shield-lock-fill"></i> UTHM Library <span class="badge bg-danger ms-1">ADMIN</span>
+                </a>
+            }
+            else
+            {
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-book-half"></i> UTHM Library
+                </a>
+            }
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Nav Items -->
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    @if (User.Identity?.IsAuthenticated == true && role == "Student")
+                    {
+                        <!-- HOME -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house"></i> Home
+                            </a>
+                        </li>
+
+                        <!-- LIBRARY DROPDOWN -->
+                        <li class="nav-item dropdown-hover">
+                            <a class="nav-link dropdown-toggle" href="#">
+                                <i class="bi bi-journals"></i> Library
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Resources" asp-action="PastYearPapers"><i class="bi bi-file-earmark-text"></i> Past Year Papers</a></li>
+                                <li><a class="dropdown-item" asp-controller="Resources" asp-action="EBooks"><i class="bi bi-book"></i> E-Books</a></li>
+                                <li><a class="dropdown-item" asp-controller="Resources" asp-action="Index"><i class="bi bi-collection"></i> Resources</a></li>
+                                <li><a class="dropdown-item" asp-controller="Resources" asp-action="ProjectReports"><i class="bi bi-mortarboard"></i> Project Reports</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- BOOK ROOM DROPDOWN -->
+                        <li class="nav-item dropdown-hover">
+                            <a class="nav-link dropdown-toggle" href="#">
+                                <i class="bi bi-calendar-check"></i> Book Room
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="StudyRoom" asp-action="Index">
+                                        <i class="bi bi-door-open"></i> Study Room <span class="badge bg-primary ms-1">RM10</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="MeetingRoom" asp-action="Index">
+                                        <i class="bi bi-people"></i> Meeting Room <span class="badge bg-success ms-1">FREE</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- DASHBOARD -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+
+                        <!-- AI CHAT (STUDENT) -->
+                        <li class="nav-item">
+                            <a class="nav-link chatbot-nav-btn" asp-controller="Chat" asp-action="Index">
+                                <i class="bi bi-robot"></i> AI Chat
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.Identity?.IsAuthenticated == true && role == "Admin")
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Index"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Resources"><i class="bi bi-folder"></i> Resources</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="StudyRooms"><i class="bi bi-door-open"></i> Study Rooms</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="MeetingRooms"><i class="bi bi-people"></i> Meeting Rooms</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="StudyBookings"><i class="bi bi-calendar-check"></i> Study Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="MeetingBookings"><i class="bi bi-calendar-event"></i> Meeting Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Admin" asp-action="Users"><i class="bi bi-person"></i> Users</a></li>
+
+                        <!-- AI CHAT (ADMIN) -->
+                        <li class="nav-item">
+                            <a class="nav-link chatbot-nav-btn" asp-controller="Chat" asp-action="Index">
+                                <i class="bi bi-robot"></i> AI Chat
+                            </a>
+                        </li>
+                    }
+
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <!-- User Info & Logout -->
+                        <li class="nav-item ms-lg-2">
+                            <span class="nav-user"><i class="bi bi-person-circle"></i> @displayName</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-uthm-outline btn-sm ms-lg-2" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================
+    MAIN CONTENT
+    ============================================ -->
+    <main class="container-fluid px-4 py-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["Info"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle-fill"></i> @TempData["Info"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @RenderBody()
+    </main>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer class="uthm-footer text-center py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-start">
+                    <h6><i class="bi bi-book-half"></i> UTHM Library</h6>
+                    <small>Smart Monitoring System</small>
+                </div>
+                <div class="col-md-4">
+                    <small>&copy; @DateTime.Now.Year Universiti Tun Hussein Onn Malaysia</small>
+                </div>
+                <div class="col-md-4 text-end">
+                    <small>Perpustakaan Tunku Tun Aminah</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================
+    FLOATING CHATBOT (Small Icon)
+    ============================================ -->
+    <div class="chatbot-float">
+        <a asp-controller="Chat" asp-action="Index" class="float-btn" title="AI Chat Assistant">
+            <i class="bi bi-robot"></i>
+            <span class="notification-dot"></span>
+        </a>
+    </div>
+
+    <!-- ============================================
+    SCRIPTS
+    ============================================ -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+            // Simple click handler for mobile dropdowns
+            document.addEventListener('DOMContentLoaded', function() {
+                var dropdowns = document.querySelectorAll('.dropdown-hover > .dropdown-toggle');
+
+                dropdowns.forEach(function(toggle) {
+                    toggle.addEventListener('click', function(e) {
+                        if (window.innerWidth < 992) {
+                            e.preventDefault();
+                            var parent = this.closest('.dropdown-hover');
+                            var menu = parent.querySelector('.dropdown-menu');
+
+                            document.querySelectorAll('.dropdown-hover .dropdown-menu.show').forEach(function(m) {
+                                if (m !== menu) {
+                                    m.classList.remove('show');
+                                }
+                            });
+
+                            menu.classList.toggle('show');
+                        }
+                    });
+                });
+            });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

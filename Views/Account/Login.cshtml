@@ -1,0 +1,46 @@
+﻿@using UTHMLibrary.ViewModels
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Student Login";
+    Layout = "_AuthLayout";
+}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo"><i class="bi bi-book-half"></i></div>
+        <h2>UTHM Library</h2>
+        <p>Smart Monitoring System</p>
+    </div>
+
+    <div class="auth-tabs">
+        <a asp-action="Login" class="active">Student</a>
+        <a asp-action="AdminLogin">Staff / Admin</a>
+    </div>
+
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Email</label>
+            <input asp-for="Email" class="form-control" placeholder="student@uthm.edu.my" autofocus />
+            <span asp-validation-for="Email" class="text-danger small"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"><i class="bi bi-lock"></i> Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Enter password" />
+            <span asp-validation-for="Password" class="text-danger small"></span>
+        </div>
+        <div class="mb-3 form-check">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+        </div>
+        <button type="submit" class="btn btn-uthm w-100"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+    </form>
+
+    <p class="text-center mt-3 mb-0 small">
+        Don't have an account? <a asp-action="Register" class="auth-link">Register here</a>
+    </p>
+    <p class="text-center mt-2 mb-0 text-muted small">
+        Demo Student: student@uthm.edu.my / Student@123
+    </p>
+</div>

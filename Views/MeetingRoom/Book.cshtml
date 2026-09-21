@@ -1,0 +1,105 @@
+﻿@using UTHMLibrary.ViewModels
+@model MeetingRoomBookingViewModel
+@{
+    ViewData["Title"] = "Book Meeting Room";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="payment-card">
+            <h4 class="mb-3"><i class="bi bi-people"></i> Book Meeting Room - @Model.RoomNumber</h4>
+            <p class="text-muted">Free booking. Requires 5 unique matric numbers.</p>
+
+            <form asp-action="Book" method="post">
+                <input type="hidden" asp-for="MeetingRoomId" />
+                <input type="hidden" asp-for="RoomNumber" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="BookingDate" class="form-label"><i class="bi bi-calendar"></i> Date</label>
+                        <input asp-for="BookingDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="BookingDate" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="StartTime" class="form-label"><i class="bi bi-clock"></i> Start</label>
+                        <select asp-for="StartTime" class="form-select">
+                            <option value="08:00">8:00 AM</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="EndTime" class="form-label"><i class="bi bi-clock"></i> End</label>
+                        <select asp-for="EndTime" class="form-select">
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                            <option value="17:00">5:00 PM</option>
+                            <option value="18:00">6:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="21:00">9:00 PM</option>
+                            <option value="22:00">10:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Purpose" class="form-label"><i class="bi bi-file-text"></i> Purpose</label>
+                    <input asp-for="Purpose" class="form-control" placeholder="e.g., Project meeting, Presentation" />
+                    <span asp-validation-for="Purpose" class="text-danger small"></span>
+                </div>
+
+                <hr />
+                <h6 class="mb-3"><i class="bi bi-person-badge"></i> Member Matric Numbers (5 required)</h6>
+                <div class="row">
+                    <div class="col-md mb-2">
+                        <label asp-for="Matric1" class="form-label small">Matric 1</label>
+                        <input asp-for="Matric1" class="form-control" placeholder="AI210001" />
+                    </div>
+                    <div class="col-md mb-2">
+                        <label asp-for="Matric2" class="form-label small">Matric 2</label>
+                        <input asp-for="Matric2" class="form-control" placeholder="AI210002" />
+                    </div>
+                    <div class="col-md mb-2">
+                        <label asp-for="Matric3" class="form-label small">Matric 3</label>
+                        <input asp-for="Matric3" class="form-control" placeholder="AI210003" />
+                    </div>
+                    <div class="col-md mb-2">
+                        <label asp-for="Matric4" class="form-label small">Matric 4</label>
+                        <input asp-for="Matric4" class="form-control" placeholder="AI210004" />
+                    </div>
+                    <div class="col-md mb-2">
+                        <label asp-for="Matric5" class="form-label small">Matric 5</label>
+                        <input asp-for="Matric5" class="form-control" placeholder="AI210005" />
+                    </div>
+                </div>
+                <span asp-validation-for="Matric1" class="text-danger small"></span>
+
+                <div class="alert alert-info mt-3">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Note:</strong> All 5 matric numbers must be unique. This booking requires admin approval.
+                </div>
+
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="bi bi-send"></i> Submit for Approval
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

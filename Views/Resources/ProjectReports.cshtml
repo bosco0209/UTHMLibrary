@@ -1,0 +1,47 @@
+﻿@model List<Resource>
+@{
+    ViewData["Title"] = "Project Reports";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-mortarboard"></i> Undergraduate Project Reports</h1>
+        <p>Browse final year project reports</p>
+    </div>
+    <form method="get" class="d-flex">
+        <input type="text" name="q" class="form-control me-2" placeholder="Search by title, author, year..." value="@ViewBag.Query" />
+        <button type="submit" class="btn btn-uthm"><i class="bi bi-search"></i> Search</button>
+    </form>
+</div>
+
+<div class="row g-3">
+    @if (Model.Any())
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="resource-card">
+                    <div class="resource-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);"><i class="bi bi-mortarboard"></i></div>
+                    <div>
+                        <h5>@item.Title</h5>
+                        <p class="meta"><i class="bi bi-person"></i> @item.Author</p>
+                        <p class="meta"><i class="bi bi-building"></i> @item.Faculty | @item.Year</p>
+                        <p class="desc">@item.Description</p>
+                        <a asp-action="Download" asp-route-id="@item.Id" class="btn btn-sm btn-uthm mt-2">
+                            <i class="bi bi-download"></i> Download
+                        </a>
+                        <span class="badge bg-secondary ms-2">@item.DownloadCount downloads</span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-mortarboard" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="text-muted mt-3">No project reports found.</p>
+        </div>
+    }
+    }
+</div>

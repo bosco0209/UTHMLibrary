@@ -1,0 +1,70 @@
+﻿@model List<MeetingRoomBooking>
+@{
+    ViewData["Title"] = "Meeting Bookings";
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="bi bi-calendar-event"></i> Meeting Room Bookings</h1>
+        <p>Manage meeting room bookings (pending approval)</p>
+    </div>
+</div>
+
+<div class="table-card">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Room</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td>@(b.User?.FullName ?? "N/A")</td>
+                        <td>@(b.MeetingRoom?.RoomNumber ?? "N/A")</td>
+                        <td>@b.BookingDate.ToString("dd MMM yyyy")</td>
+                        <td>@b.StartTime - @b.EndTime</td>
+                        <td>@b.Purpose</td>
+                        <td>
+                            <span class="badge @(b.Status == "Approved" ? "badge-approved" : b.Status == "Pending" ? "badge-pending" : "badge-rejected")">
+                                @b.Status
+                            </span>
+                        </td>
+                        <td>
+                            @if (b.Status == "Pending")
+                            {
+                                <form asp-action="ApproveMeetingBooking" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@b.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                </form>
+                                <form asp-action="RejectMeetingBooking" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@b.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Reject this booking?')">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-3">No meeting bookings found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

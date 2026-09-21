@@ -1,0 +1,36 @@
+﻿@using UTHMLibrary.ViewModels
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "_AuthLayout";
+}
+<div class="auth-card">
+    <div class="auth-header">
+        <div class="logo" style="background: linear-gradient(135deg, #E63946, #003876);"><i class="bi bi-shield-lock"></i></div>
+        <h2>Admin Portal</h2>
+        <p>Staff Access Only</p>
+    </div>
+
+    <div class="auth-tabs">
+        <a asp-action="Login">Student</a>
+        <a asp-action="AdminLogin" class="active">Staff / Admin</a>
+    </div>
+
+    <form asp-action="AdminLogin" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Admin Email</label>
+            <input asp-for="Email" class="form-control" placeholder="admin@uthm.edu.my" autofocus />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"><i class="bi bi-lock"></i> Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Enter admin password" />
+        </div>
+        <button type="submit" class="btn btn-accent w-100"><i class="bi bi-shield-check"></i> Login as Admin</button>
+    </form>
+
+    <p class="text-center mt-3 mb-0 text-muted small">
+        Default Admin: admin@uthm.edu.my / Admin@123
+    </p>
+</div>
